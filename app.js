@@ -2,7 +2,7 @@ const express = require("express");
 require('dotenv/config')
 const morgan = require('morgan')
 const app = express();
-const api=process.env.API_URL
+const api="/api/v1"
 
 const mongoose = require('mongoose')
 
@@ -18,7 +18,7 @@ const Users = mongoose.model("collUsers",UsersSchema); //collection
 app.use(express.json())
 app.use(morgan('tiny'))
 //db Connection
-mongoose.connect(process.env.CONNECTION_STRING,{
+mongoose.connect("mongodb+srv://root:Demo123@nirancluster.yqpm8sy.mongodb.net/?retryWrites=true&w=majority",{
     useNewUrlParser: true,
     useUnifiedTopology:true,
     dbName:'dbUsers'
