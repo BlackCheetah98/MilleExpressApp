@@ -44,7 +44,7 @@ app.get(`/users`,async (req,res)=>{
 
 app.post(`/users`,(req,res)=>{
     const userInstance = new Users({
-        name:"Niranjan",
+        name:"Kishore",
         profilePicture:"dfghjkjhgfdfghjkjhgfd",
         code:1234,
         isAuth:false
