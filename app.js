@@ -17,9 +17,9 @@ const Users = mongoose.model("collUsers",UsersSchema); //collection
 //middleware
 app.use(express.json())
 app.use(morgan('tiny'))
-app.use((req,res,next)=>{
-    //res.setHeader("Access-Control-Allow-Origin","*")
-})
+// app.use((req,res,next)=>{
+//     //res.setHeader("Access-Control-Allow-Origin","*")
+// })
 //db Connection
 mongoose.connect("mongodb+srv://root:Demo123@nirancluster.yqpm8sy.mongodb.net/?retryWrites=true&w=majority",{
     useNewUrlParser: true,
