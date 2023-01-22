@@ -33,7 +33,7 @@ app.listen(3000,()=>{
 //APIs
 app.get('/',(req,res)=>{
     console.log("Server is running")
-    alert("req.subdomains: "+req.subdomains)
+    alert("req.subdomains: "+req)
     res.send("Mille v0.0.0.1 API Request",req.subdomains[0])
 })
 
