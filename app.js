@@ -35,7 +35,7 @@ app.listen(3000,()=>{
 //APIs
 app.get('/',(req,res)=>{
     res.send("Root API Request - v0.0.0.2")
-    //console.log(req.subdomains);
+    console.log(req.subdomains);
 })
 
 app.get(`/users`,async (req,res)=>{
