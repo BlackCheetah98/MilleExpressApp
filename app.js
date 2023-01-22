@@ -31,30 +31,64 @@ app.listen(3000,()=>{
 })
 
 //APIs
-app.get('/',(req,res)=>{
-    console.log("Server is running")
-    alert("req.subdomains: "+req)
-    res.send("Mille v0.0.0.1 API Request",req.subdomains[0])
-})
+// app.get('/',(req,res)=>{
+//     console.log("req.subdomains: ",req.subdomains)
+//     res.send("Mille v0.0.0.1 API Request")
+// })
 
-app.get(`/users`,async (req,res)=>{
-    const usersList = await Users.find()
-    res.send(usersList)
-})
+// app.get(`/users`,async (req,res)=>{
+//     const usersList = await Users.find()
+//     res.send(usersList)
+// })
 
-app.post(`/users`,(req,res)=>{
-    const userInstance = new Users({
-        name:"Kishore",
-        profilePicture:"dfghjkjhgfdfghjkjhgfd",
-        code:1234,
-        isAuth:false
-    })
-    userInstance.save().then(resObject =>{
-        res.status(201).json(resObject)
-    }).catch((err)=>{
-        res.status(500).json({
-            error:err,
-            success:false
-        })
-    })
-})
+// app.post(`/users`,(req,res)=>{
+//     const userInstance = new Users({
+//         name:"Kishore",
+//         profilePicture:"dfghjkjhgfdfghjkjhgfd",
+//         code:1234,
+//         isAuth:false
+//     })
+//     userInstance.save().then(resObject =>{
+//         res.status(201).json(resObject)
+//     }).catch((err)=>{
+//         res.status(500).json({
+//             error:err,
+//             success:false
+//         })
+//     })
+// })
+
+
+
+app.get('*', function(req, res, next){
+    console.log("req.headers.host: ",req.headers.host)
+    console.log("req.url: ",req.url)
+    res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+    // if (req.headers.host == 'test1.localhost:3000') { //Port is important if the url has it
+    //     req.url = '/test1' + req.url;
+    // }
+    // else if(req.headers.host == 'test2.localhost:3000') {
+    //     req.url = '/test2' + req.url;
+    // }  
+    // next();
+});
+
+
+app.get('/', function(req,res){
+    //Default case, no subdomain
+    console.log("i am Default");
+    res.send("i am default");
+  
+  })
+  
+  app.get('/:username', function(req,res){
+     //Buyers subdomain
+     console.log("i am test1");
+     res.send(req.params);
+  })
+  
+  app.get('/test2', function(req,res){
+     //Sellers subdomain
+     console.log("i am sellers");
+     res.send("i am test2");
+  })
