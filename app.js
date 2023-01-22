@@ -32,8 +32,9 @@ app.listen(3000,()=>{
 
 //APIs
 app.get('/',(req,res)=>{
+    console.log("Server is running")
     console.log("req.subdomains: ",req.subdomains)
-    res.send("Mille v0.0.0.1 API Request")
+    res.send("Mille v0.0.0.1 API Request",req.subdomains[0])
 })
 
 app.get(`/users`,async (req,res)=>{
