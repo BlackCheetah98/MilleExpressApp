@@ -1,5 +1,7 @@
+
 const express = require("express");
 require('dotenv/config')
+const constants = require('./constants')
 const morgan = require('morgan')
 const app = express();
 const api="/api/v1"
@@ -7,11 +9,15 @@ const api="/api/v1"
 const mongoose = require('mongoose')
 
 const UsersSchema = mongoose.Schema({
-    name:String,
-    profilePicture:String,
+    name:{type:String,required:true},
+    profilePicture:{type:String,default:constants.defaultUserImage},
     code:{type:Number,default:0},
-    isAuth:Boolean
+    isAuth:{Boolean,default:false},
+    isOnboarded:{Boolean,default:false},
+    webSite:{type:String,default:"{}"},
+    nativeSite:{type:String,default:"{}"}
 });
+
 const Users = mongoose.model("collUsers",UsersSchema); //collection
 
 //middleware
@@ -27,15 +33,19 @@ mongoose.connect("mongodb+srv://root:Demo123@nirancluster.yqpm8sy.mongodb.net/?r
     console.log("mongo db connected successfully")
 })
 app.listen(3000,()=>{
-    console.log("Server is running")
+    console.log("Server is running",)
 })
 
 app.get('*', function(req, res, next){
     // console.log("req.url: ",req.subdomains)
     console.log("req.headers.host: ",req.headers.host)
     console.log("req.url: ",req.url)
-    res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
-    // if (req.headers.host == 'test1.localhost:3000') { //Port is important if the url has it
+    if(req.headers.host.toString().split(".").length > 1)
+        res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+    else
+        next();
+    
+    // if (req.headers.host == 'test1.localhost:3000') {
     //     req.url = '/test1' + req.url;
     // }
     // else if(req.headers.host == 'test2.localhost:3000') {
@@ -46,20 +56,36 @@ app.get('*', function(req, res, next){
 
 
 app.get('/', function(req,res){
-    //Default case, no subdomain
-    console.log("i am Default");
-    res.send("i am default");
-
+    res.send("Mille Root")
 })
 
-app.get('/:username', function(req,res){
-    //Buyers subdomain
-    console.log("i am test1");
-    res.send(req.params);
-})
+//get custom domain parameters
+// app.get('/:username', function(req,res){
+//     //Buyers subdomain
+//     console.log("i am test1");
+//     res.send(req.params);
+// })
 
-app.get('/test2', function(req,res){
+app.post(api+'/createUserProfile', function(req,res){
     //Sellers subdomain
-    console.log("i am sellers");
-    res.send("i am test2");
+    const user = new Users ({
+        name:req.body.name,
+        profilePicture:req.body.profilePicture,
+        code:req.body.code,
+        isAuth:req.body.isAuth,
+        isOnboarded:req.body.isOnboarded
+    })
+    user.save().then((createdUser)=>{
+            res.status(201).json(createdUser)
+    }).catch((err)=>{
+        res.status(500).json({
+            error:err,
+            success:false
+        })
+    })
+})
+
+app.get(api+'/getAllUserProfiles', async function(req,res){
+    const usersList = await Users.find();
+    res.send(usersList)
 })
