@@ -30,7 +30,7 @@ app.listen(3000,()=>{
     console.log("Server is running")
 })
 
-app.get('*', function(req, res, next){
+app.get('*/mille', function(req, res, next){
     // console.log("req.url: ",req.subdomains)
     console.log("req.headers.host: ",req.headers.host)
     console.log("req.url: ",req.url)
