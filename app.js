@@ -42,7 +42,7 @@ app.get('*', function(req, res, next){
     
     if(req.headers.host.toString().split(".").length > 1)
         //retrieve user record from db
-        if(false) {
+        if(true) {
             res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
         }
         else {
@@ -61,7 +61,7 @@ app.get('*', function(req, res, next){
 
 
 app.get('/', function(req,res){
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/frontend/build/index.html');
 })
 
 //get custom domain parameters
