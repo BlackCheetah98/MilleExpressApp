@@ -25,38 +25,43 @@ app.use(express.json())
 app.use(morgan('tiny'))
 var router = express.Router(); 
 //db Connection
-mongoose.connect("mongodb+srv://root:Demo123@nirancluster.yqpm8sy.mongodb.net/?retryWrites=true&w=majority",{
+mongoose.connect("mongodb+srv://User01:Abc123@millecluster.m6ezxdm.mongodb.net/?retryWrites=true&w=majority",{
     useNewUrlParser: true,
     useUnifiedTopology:true,
     dbName:'dbUsers'
 }).then(()=>{
     console.log("mongo db connected successfully")
 })
-app.listen(3000,()=>{
+
+app.listen(8000,()=>{
     console.log("Server is running",)
 })
 
+//Website Builder functionality
 app.get('*', function(req, res, next){
-    // console.log("req.url: ",req.subdomains)
-    console.log("req.headers.host: ",req.headers.host)
-    console.log("req.url: ",req.url)
+    
     if(req.headers.host.toString().split(".").length > 1)
-        res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+        //retrieve user record from db
+        if(false) {
+            res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+        }
+        else {
+            res.send("User Website Not Found")
+            // res.sendFile('./templates/promoCreateWebsite.html');
+            
+        }
     else
         next();
     
     // if (req.headers.host == 'test1.localhost:3000') {
     //     req.url = '/test1' + req.url;
     // }
-    // else if(req.headers.host == 'test2.localhost:3000') {
-    //     req.url = '/test2' + req.url;
-    // }  
     // next();
 });
 
 
 app.get('/', function(req,res){
-    res.send("Mille Root")
+    res.sendFile(__dirname + '/index.html');
 })
 
 //get custom domain parameters
