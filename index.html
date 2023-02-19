@@ -8,9 +8,11 @@
       <div id="react-app"></div> 
       <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script> 
       <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script> 
-      <script language="JavaScript"> 
-         element = React.createElement('h1', {}, 'Hello React!') 
-         ReactDOM.render(element, document.getElementById('react-app')); 
+      
+      <script language="JavaScript">
+        import { argument } from './comm.js';
+        element = React.createElement('h1', {}, "-> "+argument+" ");
+        ReactDOM.render(element, document.getElementById('react-app')); 
       </script> 
    </body> 
 </html>

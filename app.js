@@ -43,7 +43,11 @@ app.get('*', function(req, res, next){
     if(req.headers.host.toString().split(".").length > 1)
         //retrieve user record from db
         if(true) {
-            res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+            //const comm = require("./comm")
+            //comm.argument = req.headers.host.toString().split(".")[0];
+            //res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+            console.log("entered server")
+            res.sendFile(__dirname + '/frontend/public/index.html');
         }
         else {
             res.send("User Website Not Found")
