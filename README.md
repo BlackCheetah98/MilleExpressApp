@@ -1,5 +1,11 @@
 # MilleExpressApp
 
-To start the server
+
+To install dependencies in local machine:
+
+npm install
+
+
+To start the server:
 
 npm start
