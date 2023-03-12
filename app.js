@@ -45,9 +45,9 @@ app.get('*', function(req, res, next){
         if(true) {
             //const comm = require("./comm")
             //comm.argument = req.headers.host.toString().split(".")[0];
-            //res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
+            res.send("Now on "+req.headers.host+", Hello "+ req.headers.host.toString().split(".")[0])
             console.log("entered server")
-            res.sendFile(__dirname + '/frontend/public/index.html');
+            // res.sendFile(__dirname + '/frontend/public/index.html');
         }
         else {
             res.send("User Website Not Found")
