@@ -125,6 +125,7 @@ app.get("/api/v1/users", async (req, res) => {
 });
 
 //get a user
+//www.milleservices.com/api/v1/users/100
 app.get("/api/v1/users/:user_id", async (req, res) => {
     console.log(req.params.id);
     try{
@@ -141,7 +142,7 @@ app.get("/api/v1/users/:user_id", async (req, res) => {
         console.log(reviews);
       
         res.status(200).json({
-            status: "succes",
+            status: "success",
             data: {
                 user: user.rows[0],
                 reviews: reviews.rows,
