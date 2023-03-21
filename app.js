@@ -3,6 +3,7 @@ const express = require("express");
 require('dotenv/config')
 const constants = require('./constants')
 const morgan = require('morgan')
+const db = require("./db");
 const app = express();
 const api="/api/v1"
 
@@ -38,6 +39,7 @@ app.listen(8000,()=>{
 })
 
 //Website Builder functionality
+/*
 app.get('*', function(req, res, next){
     
     if(req.headers.host.toString().split(".").length > 1)
@@ -62,24 +64,15 @@ app.get('*', function(req, res, next){
     // }
     // next();
 });
-
+*/
 
 app.get('/', function(req,res){
     res.sendFile(__dirname + '/index.html');
 })
 
-
-
 app.get('/main', function(req,res){
     res.sendFile(__dirname + '/index.html');
 })
-
-//get custom domain parameters
-// app.get('/:username', function(req,res){
-//     //Buyers subdomain
-//     console.log("i am test1");
-//     res.send(req.params);
-// })
 
 app.post(api+'/createUserProfile', function(req,res){
     //Sellers subdomain
@@ -107,6 +100,21 @@ app.get(api+'/getAllUserProfiles', async function(req,res){
 
 //get all users
 app.get("/api/v1/users", async (req, res) => {
+    const { Client } = require('pg')
+    const client = new Client({
+        host: 'dpg-cfe14o1mbjsrs6a5o9vg-a',
+        port: 5334,
+        database:'mille',
+        user: 'adminroot',
+        password: '9ItHnxe6kRmRpzmOP0STgMozZrx6SVQd',
+      })
+      client.connect((err) => {
+        if (err) {
+          console.error('pg connection error', err.stack)
+        } else {
+          console.log('connected to postgres')
+        }
+      })
     try{
         //const results = await db.query("select * from users")
         const userRatingsData = await db.query(
