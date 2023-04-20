@@ -45,7 +45,6 @@ app.get('/', async (req,res)=>{
         //         // reviews: reviews.rows,
         //     },
         // });
-    // res.flash('success', 'this is info flash message2');
     let items = [];
     let k=0
     webspaces.forEach(ws => {
