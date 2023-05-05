@@ -1,5 +1,5 @@
 
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 // import logo from "./logo.svg";
 import "./App.css";
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Segmented, Avatar, List, Card, Tooltip, } from 'antd';
@@ -9,62 +9,8 @@ import { Typography , Breadcrumb, Layout, Menu, theme, Carousel  } from 'antd';
 
 const { Header, Content, Footer } = Layout;
 
-const menuitems = [
-  {
-    label: 'Restaurants',
-    key: 'mail',
-    icon: <svg width="24" height="24" class="icon_svg"><path d="M12 15.25a1 1 0 01-.7-.29l-4.58-4.5A1.011 1.011 0 018.12 9L12 12.85 15.88 9a1 1 0 111.4 1.42L12.7 15a1 1 0 01-.7.25z"></path></svg>,
-  },
-  {
-    label: 'Navigation Two',
-    key: 'app',
-    icon: <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48"><path d="M220 876h150V626h220v250h150V486L480 291 220 486v390Zm-60 60V456l320-240 320 240v480H530V686H430v250H160Zm320-353Z"/></svg>,
-    disabled: false,
-  },
-  {
-    label: 'Navigation Three - Submenu',
-    key: 'SubMenu',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        type: 'group',
-        label: 'Item 1',
-        children: [
-          {
-            label: 'Option 1',
-            key: 'setting:1',
-          },
-          {
-            label: 'Option 2',
-            key: 'setting:2',
-          },
-        ],
-      },
-      {
-        type: 'group',
-        label: 'Item 2',
-        children: [
-          {
-            label: 'Option 3',
-            key: 'setting:3',
-          },
-          {
-            label: 'Option 4',
-            key: 'setting:4',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: (
-      <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-        Navigation Four - Link
-      </a>
-    ),
-    key: 'alipay',
-  },
-];
+
+const apiPrefix = "http://localhost:8000/api/v1";
 
 function App() {
   const [data, setData] = React.useState(null);
@@ -75,78 +21,7 @@ function App() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const contentStyle = {
-    height: '160px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
-  };
-  const category = [ 
-    {
-      label: (
-        <div style={{ padding: 4 }}> 
-          <Avatar src="https://assets.tendercuts.in/category/S/e/f9a8cb8c-ac77-44dd-9be2-e0e80c0db433.jpg" />
-          <div>Fishes</div>
-        </div>
-      ),
-      value: 'Fishes',
-    },
-    {
-      label: (
-        <div style={{ padding: 4 }}>
-        <Avatar src="https://assets.tendercuts.in/product/C/H/0b2422c9-12d1-4c13-bd96-9948ad114c97.webp" />
-          <div>Peeled Sea Foods</div>
-        </div>
-      ),
-      value: 'PeeledSeaFoods',
-    },
-    {
-      label: (
-        <div style={{ padding: 4 }}>
-          <Avatar src="https://assets.tendercuts.in/product/c/o/combo_rohu_prawns_medium.jpg" />
-          <div>Dry Fishes</div> 
-        </div>
-      ),
-      value: 'DryFishes',
-    },
-    {
-      label: (
-        <div style={{ padding: 4 }}>
-          <Avatar src="https://assets.tendercuts.in/product/c/o/combo_rohu_prawns_medium.jpg" />
-          <div>Ready To Cook</div> 
-        </div>
-      ),
-      value: 'ReadyToCook',
-    },
-    {
-      label: (
-        <div style={{ padding: 4 }}>
-          <Avatar src="https://assets.tendercuts.in/product/c/o/combo_rohu_prawns_medium.jpg" />
-          <div>Crabs</div> 
-        </div>
-      ),
-      value: 'Crabs',
-    },
-    {
-      label: (
-        <div style={{ padding: 4 }}>
-          <Avatar src="https://assets.tendercuts.in/product/c/o/combo_rohu_prawns_medium.jpg" />
-          <div>Prawns</div> 
-        </div>
-      ),
-      value: 'Prawns',
-    },
-    {
-      label: (
-        <div style={{ padding: 4 }}>
-          <Avatar src="https://assets.tendercuts.in/product/c/o/combo_rohu_prawns_medium.jpg" />
-          <div>Squids</div> 
-        </div>
-      ),
-      value: 'Squids',
-    },
-  ];
+  const menuitems = [];  
   const dataToCards = [
     {
       title: 'Freshwater Pomfret - Yeri Vavval',
@@ -205,6 +80,52 @@ function App() {
     },
   ];
 
+  const [allRetrievedItems, setAllRetrievedItems] = useState(null);
+  useEffect(() => {
+    fetch(apiPrefix+"/getinitData")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`This is an HTTP error: The status is ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((actualData) => {
+        setAllRetrievedItems(actualData.data)
+      })
+      .catch((err) => {
+        console.log(err.message);
+      })
+   
+  }, []);
+  // console.log("allCatItems", allRetrievedItems);
+  if( allRetrievedItems != null ){
+    let catTaglist = allRetrievedItems.headers;
+    // allRetrievedItems.forEach(element => {
+    //   if(!catTaglist.includes(element.tag) )
+    //     catTaglist.push(element.tag);
+    // });
+    let tempTagItem,tempTagChild = [];
+    catTaglist.forEach(element => {
+      tempTagChild=[];
+      allRetrievedItems.categories.forEach(item => {
+        if(item.tag === element.ID){
+          tempTagChild.push({
+            label: item.name,
+            key: item.ID,
+            icon:  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d={item.iconUrl}/></svg>,
+          })
+        }
+      });
+      tempTagItem = {
+        label: element.name,
+        key: element.name,
+        icon: <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d={element.imgUrl}/></svg>,
+        children: tempTagChild,
+      };
+      menuitems.push(tempTagItem);
+    });
+    console.log("menuitems", menuitems)
+  }
   return (
     <Layout>
       <Drawer title="Create New Site" placement="right" onClose={()=>{setOpen(false);}} open={open} 
@@ -342,16 +263,16 @@ function App() {
       <Menu style={{marginTop:"20px", marginBottom:"20px"}} onClick={(itm)=>{console.log("clicked", itm)}} mode="horizontal" items={menuitems} />
       <Carousel autoplay>
         <div>
-          <h3 style={contentStyle}>1</h3>
+          <img style={{height:"450px"}} src="https://s3-media0.fl.yelpcdn.com/educatorphoto/SzdbzhpbM0KKyr2dYu24rA/o.jpg" />
         </div>
         <div>
-          <h3 style={contentStyle}>2</h3>
+          <img style={{height:"450px"}} src="https://s3-media0.fl.yelpcdn.com/educatorphoto/SzdbzhpbM0KKyr2dYu24rA/o.jpg" />
         </div>
         <div>
-          <h3 style={contentStyle}>3</h3>
+          <img style={{height:"450px"}} src="https://s3-media0.fl.yelpcdn.com/educatorphoto/SzdbzhpbM0KKyr2dYu24rA/o.jpg" />
         </div>
         <div>
-          <h3 style={contentStyle}>4</h3>
+          <img style={{height:"450px"}} src="https://s3-media0.fl.yelpcdn.com/educatorphoto/SzdbzhpbM0KKyr2dYu24rA/o.jpg" />
         </div>
       </Carousel>
       {/* //category List */}
