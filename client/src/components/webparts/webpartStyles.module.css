@@ -1,0 +1,9 @@
+.containerEditMode {
+  background-color: "blue";
+}
+.containerViewMode {
+  background-color: "green";
+}
+.modalText {
+  font-size: "30px";
+}
