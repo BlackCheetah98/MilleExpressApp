@@ -16,6 +16,7 @@ import {
   TextInput,
   Button
 } from "react-native-web" ;
+import ReactDOM from 'react-dom/client';
 
 interface IWebsiteBuilderProps{
   editMode:boolean;
@@ -42,30 +43,34 @@ export default class WebsiteBuilder extends React.Component<IWebsiteBuilderProps
     // let varSave = serialize(App.varSiteStore);
     let varel :any = '<div><ul><li>Hello <strong>World</strong></li></ul></div>'; 
     varel = document.getElementById("rootWebsite");
+    //Process Website - remove all configurable elements 
+
     // Conversion
     let varSave = await HTMLParser(varel, true);
     WebsiteBuilder.varOutputWebsite = await JSONToHTML(varSave, false); // Default: true - true: return HTML String, false: return HTML Element
     console.log(varSave);
-    Alert.alert('Alert Title', 'My Alert Msg', [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ]);
-      console.log("alerted");
   };
-
+  componentDidMount(): void {
+    console.log("compo mount")
+    
+  }
+  componentDidUpdate(prevProps: Readonly<IWebsiteBuilderProps>, prevState: Readonly<IWebsiteBuilderStates>, snapshot?: any): void {
+    console.log("Compo update")
+    if(!this.state.editMode){
+      const container:any = document.getElementById('htmlParsedValue');
+      // const root = ReactDOM.createRoot(container);
+      // console.log("{WebsiteBuilder.varOutputWebsite}: ", WebsiteBuilder.varOutputWebsite)
+      // root.render(WebsiteBuilder.varOutputWebsite);
+      container.innerHTML=WebsiteBuilder.varOutputWebsite;
+    }
+  }
   public render(){
     
-    if(this.state.editMode) {
-      console.log("edit mode true")
       return(
         
         <div className="App">
           <div style={{ display: "flex", padding: "20px" }}>
-          <Text>Switch Modes: </Text>
+          <Text>Switch Modes(Edit Mode/ View Mode): </Text>
           <Switch
             onValueChange={(val:any) => {
               this.setState({editMode:val}) 
@@ -74,27 +79,25 @@ export default class WebsiteBuilder extends React.Component<IWebsiteBuilderProps
             value={this.state.editMode}
           />
         </div>
-        
-        <div id="rootWebsite">
-          <div id="websiteBoundary">
-            <SLineWebSection title={""} editMode={true} />
+        {(this.state.editMode)?
+        <>
+          <div id="rootWebsite">
+            <div id="websiteBoundary">
+              <SLineWebSection title={""} editMode={true} />
+            </div>
           </div>
-          </div>
-        <Button
-          onPress={this.convertJsxToJson}
-          title="Save"
-        />
+          <Button
+            onPress={this.convertJsxToJson}
+            title="Save"
+          />
+        </>
+        :
+        <div id="htmlParsedValue">
+          
         </div>
-      );
-    }
-    else {
-      console.log("edit mode false");
-      return(
-        <div className="App">
-          {WebsiteBuilder.varOutputWebsite}
+        }
         </div>
-      )
-    }
+    );
   }
 
 }
